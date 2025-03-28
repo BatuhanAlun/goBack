@@ -2,30 +2,63 @@ package main
 
 import (
 	"flag"
-	"fmt"
+	"log"
 )
 
-func ParseFlags() {
-	var userFlag = flag.String("user", "Undefined", "Username for Database")
-	var dbTypeFlag = flag.String("db-type", "Undefined", "DB Type selection")
+func ParseFlags() Args {
+	var userFlag = flag.String("user", "username-Undefined", "Username for Database")
+	var dbTypeFlag = flag.String("db-type", "dbtype-Undefined", "DB Type selection")
 	var backupFlag = flag.Bool("backup", false, "Is it gonna back Up ?")
-	var backupDirFlag = flag.String("backup-dir", "/", "Dump file Location")
+	var backupDirFlag = flag.String("backup-dir", "backupdir-Undefined", "Dump file Location")
 	var loadFlag = flag.Bool("load", false, "Is it gonna Load ?")
 	var dumpFileLocationFlag = flag.String("dump-file", "Undefined", "Dump file location for load")
 	var dbNameFlag = flag.String("db-name", "Undefined", "Db name")
 
 	flag.Parse()
-	type Args struct {
-		User             string
-		DBType           string
-		Backup           bool
-		BackupDir        string
-		Load             bool
-		DumpFileLocation string
-		DBName           string
+
+	return Args{User: *userFlag, DBType: *dbTypeFlag, Backup: *backupFlag, BackupDir: *backupDirFlag, Load: *loadFlag, DumpFileLocation: *dumpFileLocationFlag, DBName: *dbNameFlag}
+
+}
+
+func TakeBackup(argument Args) {
+	var dbChoice int // 0:sqlite  1:mysql 2:postgre
+	checkValues(argument)
+	dbChoice = decideDB(argument.DBType)
+	switch dbChoice {
+	case 0:
+		TakeBackupSqlite(argument)
+	case 1:
+
+	case 2:
+
+	case 3:
 	}
+}
 
-	Arguments := Args{User: *userFlag, DBType: *dbTypeFlag, Backup: *backupFlag, BackupDir: *backupDirFlag, Load: *loadFlag, DumpFileLocation: *dumpFileLocationFlag, DBName: *dbNameFlag}
-	fmt.Println(Arguments)
+func checkValues(argument Args) {
+	if argument.DBType == "dbtype-Undefined" {
+		log.Fatal("db-type not defined")
+	}
+	if argument.User == "username-Undefined" {
+		log.Fatal("user not defined")
+	}
+	if argument.BackupDir == "backupdir-Undefined" {
+		log.Fatal("backup directory not defined")
+	}
+	if argument.DBName == "dbname-Undefined" {
+		log.Fatal("database name not defined")
+	}
+}
 
+func decideDB(dbtype string) int {
+	if dbtype == "sqlite" {
+		return 0
+	} else if dbtype == "mysql" {
+		return 1
+	} else if dbtype == "postgresql" {
+		return 2
+	} else {
+		log.Fatal("Wrong dbtype input. It should one of sqlite,mysql,postgresql")
+	}
+	return 3
 }
