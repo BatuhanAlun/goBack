@@ -11,8 +11,8 @@ func ParseFlags() Args {
 	var backupFlag = flag.Bool("backup", false, "Is it gonna back Up ?")
 	var backupDirFlag = flag.String("backup-dir", "backupdir-Undefined", "Dump file Location")
 	var loadFlag = flag.Bool("load", false, "Is it gonna Load ?")
-	var dumpFileLocationFlag = flag.String("dump-file", "Undefined", "Dump file location for load")
-	var dbNameFlag = flag.String("db-name", "Undefined", "Db name")
+	var dumpFileLocationFlag = flag.String("dump-file", "dumpfilelocation-Undefined", "Dump file location for load")
+	var dbNameFlag = flag.String("db-name", "dbname-Undefined", "Db name")
 
 	flag.Parse()
 
@@ -33,6 +33,36 @@ func TakeBackup(argument Args) {
 
 	case 3:
 	}
+}
+
+func LoadBackup(argument Args) {
+	var dbChoice int // 0:sqlite  1:mysql 2:postgre
+	checkLoadValues(argument)
+	switch dbChoice {
+	case 0:
+		LoadBackupSqlite(argument)
+	case 1:
+
+	case 2:
+
+	case 3:
+	}
+}
+
+func checkLoadValues(argument Args) {
+	if argument.DBType == "dbtype-Undefined" {
+		log.Fatal("db-type not defined")
+	}
+	if argument.User == "username-Undefined" {
+		log.Fatal("user not defined")
+	}
+	if argument.DumpFileLocation == "dumpfilelocation-Undefined" {
+		log.Fatal("Dump file location is not defined")
+	}
+	if argument.DBName == "dbname-Undefined" {
+		log.Fatal("database name not defined")
+	}
+
 }
 
 func checkValues(argument Args) {
