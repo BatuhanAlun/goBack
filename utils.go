@@ -28,7 +28,7 @@ func TakeBackup(argument Args) {
 	case 0:
 		TakeBackupSqlite(argument)
 	case 1:
-
+		TakeBackupMySql(argument)
 	case 2:
 
 	case 3:
@@ -38,11 +38,12 @@ func TakeBackup(argument Args) {
 func LoadBackup(argument Args) {
 	var dbChoice int // 0:sqlite  1:mysql 2:postgre
 	checkLoadValues(argument)
+	dbChoice = decideDB(argument.DBType)
 	switch dbChoice {
 	case 0:
 		LoadBackupSqlite(argument)
 	case 1:
-
+		LoadBackupMySql(argument)
 	case 2:
 
 	case 3:
@@ -50,16 +51,21 @@ func LoadBackup(argument Args) {
 }
 
 func checkLoadValues(argument Args) {
+
 	if argument.DBType == "dbtype-Undefined" {
+
 		log.Fatal("db-type not defined")
 	}
 	if argument.User == "username-Undefined" {
+
 		log.Fatal("user not defined")
 	}
 	if argument.DumpFileLocation == "dumpfilelocation-Undefined" {
+
 		log.Fatal("Dump file location is not defined")
 	}
 	if argument.DBName == "dbname-Undefined" {
+
 		log.Fatal("database name not defined")
 	}
 

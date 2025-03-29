@@ -1,0 +1,2 @@
+go run . -user root -db-type mysql --backup -backup-dir ./mySql -db-name mydatabase
+go run . -user root -db-type mysql --load -dump-file ./mySql/mysqlbackup.sql -db-name mydatabase

@@ -33,3 +33,82 @@ func LoadBackupSqlite(argument Args) {
 	}
 
 }
+
+func TakeBackupMySql(argument Args) {
+	scriptContent := `#!/bin/bash
+sudo mysqldump -u ` + argument.User + " " + argument.DBName + ` > ` + argument.BackupDir + `/mysqlbackup.sql`
+
+	tmpFile, err := os.CreateTemp("", "backup_*.sh")
+	if err != nil {
+		fmt.Println("Error creating temporary file:", err)
+		return
+	}
+	defer os.Remove(tmpFile.Name())
+
+	_, err = tmpFile.WriteString(scriptContent)
+	if err != nil {
+		fmt.Println("Error writing to temporary file:", err)
+		return
+	}
+
+	err = tmpFile.Close()
+	if err != nil {
+		fmt.Println("Error closing temporary file:", err)
+		return
+	}
+
+	err = os.Chmod(tmpFile.Name(), 0755)
+	if err != nil {
+		fmt.Println("Error setting file permissions:", err)
+		return
+	}
+
+	cmd := exec.Command(tmpFile.Name())
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	err = cmd.Run()
+	if err != nil {
+		fmt.Println("Error executing script:", err)
+	}
+
+}
+
+func LoadBackupMySql(argument Args) {
+	scriptContent := `#!/bin/bash
+	sudo mysql -u ` + argument.User + " " + argument.DBName + ` < ` + argument.DumpFileLocation
+
+	tmpFile, err := os.CreateTemp("", "backup_*.sh")
+	if err != nil {
+		fmt.Println("Error creating temporary file:", err)
+		return
+	}
+	defer os.Remove(tmpFile.Name())
+
+	_, err = tmpFile.WriteString(scriptContent)
+	if err != nil {
+		fmt.Println("Error writing to temporary file:", err)
+		return
+	}
+
+	err = tmpFile.Close()
+	if err != nil {
+		fmt.Println("Error closing temporary file:", err)
+		return
+	}
+
+	err = os.Chmod(tmpFile.Name(), 0755)
+	if err != nil {
+		fmt.Println("Error setting file permissions:", err)
+		return
+	}
+
+	cmd := exec.Command(tmpFile.Name())
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	err = cmd.Run()
+	if err != nil {
+		fmt.Println("Error executing script:", err)
+	}
+}
